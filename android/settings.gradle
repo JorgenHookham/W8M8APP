@@ -1,0 +1,3 @@
+rootProject.name = 'W8M8APP'
+
+include ':app'
