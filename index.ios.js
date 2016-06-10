@@ -97,7 +97,7 @@ class Setup extends Component {
     return (
       <View style={styles.container2}>
         <Text>Start a new workout!</Text>
-        <Button style={(this.props.selectedTemplate) ? styles.buttonActive : styles.buttonInactive} onPress={this.onPress.bind(this)}>Begin</Button>
+        <Button style={(this.props.selectedTemplate) ? styles.buttonActive : styles.buttonInactive} onPress={this.onPress.bind(this)}>BEGIN</Button>
         <Picker style={styles.picker} onValueChange={this.onChange.bind(this)} selectedValue={this.props.selectedTemplate}>{itemNodes}</Picker>
       </View>
     );
@@ -126,23 +126,25 @@ const styles = StyleSheet.create({
   },
   buttonActive: {
     color: 'white',
-    backgroundColor: 'green',
+    backgroundColor: '#FFCC33',
+    borderRadius: 4,
     fontSize: 20,
     width: 320,
     height: 40,
     marginTop: 40,
     marginBottom: 40,
-    lineHeight: 30,
+    lineHeight: 32,
   },
   buttonInactive: {
-    color: 'white',
-    backgroundColor: '#CCC',
+    color: '#F0E6D3',
+    backgroundColor: '#E0D7C5',
+    borderRadius: 4,
     fontSize: 20,
     width: 320,
     height: 40,
     marginTop: 40,
     marginBottom: 40,
-    lineHeight: 30,
+    lineHeight: 32,
   },
 });
 
