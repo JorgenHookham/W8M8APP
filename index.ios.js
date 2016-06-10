@@ -16,6 +16,11 @@ import {
 
 import Button from 'react-native-button'
 
+const {
+  workoutTemplatesJSON,
+  workoutDataJSON
+} = require('./mock-data');
+
 class W8M8 extends Component {
 
   constructor (props) {
@@ -37,10 +42,13 @@ class W8M8 extends Component {
   }
 
   requestWorkoutTemplates (onload) {
-    var request = new XMLHttpRequest();
-    request.onload = onload.bind(this, request);
-    request.open('GET', 'http://w8m8.herokuapp.com/api/workout-templates/?format=json');
-    request.send();
+    // Real request
+    // var request = new XMLHttpRequest();
+    // request.onload = onload.bind(this, request);
+    // request.open('GET', 'http://w8m8.herokuapp.com/api/workout-templates/?format=json');
+    // request.send();
+    // Mock request
+    setTimeout(onload.bind(this, workoutTemplatesJSON), 1000);
   }
 
   handleSetup (selectedTemplate) {
