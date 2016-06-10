@@ -16,7 +16,7 @@ import {
 
 import Button from 'react-native-button'
 
-class W8M8APP extends Component {
+class W8M8 extends Component {
 
   constructor (props) {
     super(props);
@@ -148,4 +148,4 @@ const styles = StyleSheet.create({
   },
 });
 
-AppRegistry.registerComponent('W8M8APP', () => W8M8APP);
+AppRegistry.registerComponent('W8M8', () => W8M8);

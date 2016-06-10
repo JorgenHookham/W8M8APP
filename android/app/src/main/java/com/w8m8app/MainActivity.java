@@ -1,4 +1,4 @@
-package com.w8m8app;
+package com.W8M8;
 
 import com.facebook.react.ReactActivity;
 import com.facebook.react.ReactPackage;
@@ -15,7 +15,7 @@ public class MainActivity extends ReactActivity {
      */
     @Override
     protected String getMainComponentName() {
-        return "W8M8APP";
+        return "W8M8";
     }
 
     /**

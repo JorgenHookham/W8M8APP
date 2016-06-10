@@ -12,7 +12,7 @@ import {
   View
 } from 'react-native';
 
-class W8M8APP extends Component {
+class W8M8 extends Component {
   render() {
     return (
       <View style={styles.container}>
@@ -49,4 +49,4 @@ const styles = StyleSheet.create({
   },
 });
 
-AppRegistry.registerComponent('W8M8APP', () => W8M8APP);
+AppRegistry.registerComponent('W8M8', () => W8M8);
