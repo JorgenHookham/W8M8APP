@@ -34,7 +34,7 @@ class W8M8 extends Component {
     super(props);
     this.state = {
       stage: 1,
-      selectedTemplate: null
+      selectedTemplate: null,
     };
   }
 
@@ -127,6 +127,17 @@ class W8M8 extends Component {
         return i;
       }
     }
+  }
+
+  skipRemainingSets (step) {
+    var steps = this.state.steps;
+    console.log(steps.length);
+    var remainders = steps.filter((s) => {
+      return s.name == step.name && !s.start_time;
+    });
+    steps.splice(steps.indexOf(remainders[0]), remainders.length * 2);
+    this.setState({steps: steps});
+    console.log(steps.length);
   }
 
   render () {
@@ -372,7 +383,6 @@ class WorkoutExerciseScreen extends Component {
 }
 
 class WorkoutRestScreen extends Component {
-  // TODO: Allow optional exercises (and subsequent rests) to be skipped
 
   constructor (props) {
     super(props);
@@ -410,7 +420,20 @@ class WorkoutRestScreen extends Component {
     this.props.appScope.setState({steps: steps});
   }
 
+  handleSkip (step) {
+    this.props.appScope.skipRemainingSets(step);
+  }
+
   render () {
+    var actions;
+    if (this.props.upcomingStep.required) {
+      actions = <Button style={styles.buttonPrimary}onPress={this.handlePress.bind(this)}>START NEXT SET</Button>
+    } else {
+      actions = <View>
+        <Button style={styles.buttonSecondary} onPress={this.handleSkip.bind(this, this.props.upcomingStep)}>SKIP REMAINING SETS</Button>
+        <Button style={styles.buttonPrimary} onPress={this.handlePress.bind(this)}>START NEXT SET</Button>
+      </View>;
+    }
     return (
       <View style={styles.container}>
         <View style={{width: 320}}>
@@ -431,16 +454,11 @@ class WorkoutRestScreen extends Component {
         </View>
 
         <View style={{width: 320}}>
-          <SubTitle text="Next Set" />
+          <SubTitle text={`Next Set ${(this.props.upcomingStep.required) ? '' : '(Optional)'}`} />
           <TableView>
             <Cell cellstyle="RightDetail" title="Exercise" detail={this.props.upcomingStep.name} />
           </TableView>
-          <Button
-            style={styles.buttonPrimary}
-            onPress={this.handlePress.bind(this)}
-          >
-            START NEXT SET
-          </Button>
+          {actions}
         </View>
       </View>
     );
@@ -571,6 +589,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingTop: 15,
+    paddingBottom: 5,
     backgroundColor: '#FFBB33',
   },
   splashContainer: {
@@ -600,8 +619,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     width: 320,
     height: 50,
-    marginTop: 40,
-    marginBottom: 40,
+    marginTop: 10,
     paddingTop: 5,
     paddingBottom: 5,
     lineHeight: 32,
@@ -613,8 +631,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     width: 320,
     height: 50,
-    marginTop: 40,
-    marginBottom: 40,
+    marginTop: 10,
     paddingTop: 5,
     paddingBottom: 5,
     lineHeight: 32,
@@ -626,8 +643,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     width: 320,
     height: 50,
-    marginTop: 40,
-    marginBottom: 40,
+    marginTop: 10,
     paddingTop: 5,
     paddingBottom: 5,
     lineHeight: 32,
@@ -639,8 +655,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     width: 320,
     height: 50,
-    marginTop: 40,
-    marginBottom: 40,
+    marginTop: 10,
     paddingTop: 5,
     paddingBottom: 5,
     lineHeight: 32,
