@@ -8,8 +8,6 @@
   "dependencies": {
     "react": "^15.1.0",
     "react-native": "0.27.2",
-    "react-native-button": "^1.6.0",
-    "react-native-dropdown": "0.0.6",
-    "react-native-tableview-simple": "^0.10.1"
+    "react-native-button": "^1.6.0"
   }
 }

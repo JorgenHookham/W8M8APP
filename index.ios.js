@@ -15,13 +15,7 @@ import {
   View
 } from 'react-native';
 
-import Button from 'react-native-button'
-
-import {
-  Cell,
-  CustomCell,
-  TableView
-} from 'react-native-tableview-simple';
+import Button from 'react-native-button';
 
 const {
   workoutTemplatesJSON,
@@ -229,24 +223,19 @@ class SummaryScreen extends Component {
       <View style={styles.container}>
         <ScreenTitle text="Workout Summary" />
         <View style={{width: 320}}>
-          <TableView style={styles.table}>
-            <Cell cellstyle="RightDetail" title="~ Duration" detail={this.props.approx_duration} />
-            <Cell cellstyle="RightDetail" title="Mucle Groups" detail={this.props.muscle_groups} />
-            <Cell cellstyle="RightDetail" title="Reps" detail={this.props.rep_range} />
-            <Cell cellstyle="RightDetail" title="Speed" detail={this.props.speed} />
-            <Cell cellstyle="RightDetail" title="% of Max" detail={this.props.percent_of_max} />
-            <Cell cellstyle="RightDetail" title="Sets" detail={this.props.set_count} />
-            <Cell cellstyle="RightDetail" title="Rest" detail={this.props.rest_time_range} />
-            <Cell cellstyle="RightDetail" title="Set Time" detail={this.props.set_time_range} />
-          </TableView>
+          <Cell label="~ Duration" value={this.props.approx_duration} />
+          <Cell label="Mucle Groups" value={this.props.muscle_groups} />
+          <Cell label="Reps" value={this.props.rep_range} />
+          <Cell label="Speed" value={this.props.speed} />
+          <Cell label="% of Max" value={this.props.percent_of_max} />
+          <Cell label="Sets" value={this.props.set_count} />
+          <Cell label="Rest" value={this.props.rest_time_range} />
+          <Cell label="Set Time" value={this.props.set_time_range} />
         </View>
         <View style={{width: 320}}>
-          <SubTitle text="First Exercise" />
-          <TableView style={styles.table}>
-            <Cell cellstyle="RightDetail" title="Exercise" detail={this.props.first_exercise_name} />
-          </TableView>
+          <Cell label="First Set" value={this.props.first_exercise_name} />
+          <Button style={styles.buttonPrimary} onPress={this.handlePress.bind(this)}>START MY WORKOUT</Button>
         </View>
-        <Button style={styles.buttonPrimary} onPress={this.handlePress.bind(this)}>START MY WORKOUT</Button>
       </View>
     );
   }
@@ -431,10 +420,10 @@ class WorkoutRestScreen extends Component {
         </View>
 
         <View style={{width: 320}}>
-          <View style={styles.horizontal}>
-            <SubTitle text={(this.props.upcomingStep) ? `Next ${(this.props.upcomingStep.required) ? '' : '(Optional)'}` : 'Complete Workout'} />
-            {this.props.upcomingStep ? <Text style={styles.giraffe}>{this.props.upcomingStep.name}</Text> : null}
-          </View>
+          <Cell
+            label={(this.props.upcomingStep) ? `Next Set ${(this.props.upcomingStep.required) ? '' : '(Optional)'}` : 'Complete Workout'}
+            value={this.props.upcomingStep ? this.props.upcomingStep.name : null}
+          />
           {actions}
         </View>
       </View>
@@ -547,6 +536,7 @@ class SubTitle extends Component {
   style () {
     return {
       marginBottom: 15,
+      color: '#333',
       fontFamily: 'Futura',
       fontSize: 20,
       fontWeight: '600',
@@ -616,6 +606,17 @@ class TheEndScreen extends Component {
     return (
       <View style={{flex: 1, alignItems: 'center'}}>
         <Image source={require('./images/success.png')} style={{flex: 1}} resizeMode={'contain'} />
+      </View>
+    );
+  }
+}
+
+class Cell extends Component {
+  render () {
+    return (
+      <View style={styles.cell}>
+        <Text style={styles.cellLabel}>{this.props.label.toUpperCase()}</Text>
+        <Text style={styles.cellValue}>{this.props.value}</Text>
       </View>
     );
   }
@@ -737,6 +738,24 @@ const styles = StyleSheet.create({
     fontFamily: 'Futura',
     fontSize: 20,
     fontWeight: '600',
+  },
+  cell: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingTop: 5,
+    paddingBottom: 5,
+  },
+  cellLabel: {
+    color: '#333',
+    fontFamily: 'Futura',
+    fontSize: 16,
+  },
+  cellValue: {
+    color: '#66533D',
+    fontFamily: 'Futura',
+    fontSize: 16,
+    fontStyle: 'italic',
   },
 });
 
