@@ -195,7 +195,7 @@ class SetupScreen extends Component {
     return (
       <View>
         <ScreenTitle text="Select Workout Template" />
-        <Button style={(this.props.selectedTemplate) ? styles.buttonBright : styles.buttonInactive} onPress={this.onPress.bind(this)}>BEGIN</Button>
+        <Button style={(this.props.selectedTemplate) ? styles.buttonPrimary : styles.buttonInactive} onPress={this.onPress.bind(this)}>BEGIN</Button>
         <Picker style={styles.picker} onValueChange={this.onChange.bind(this)} selectedValue={this.props.selectedTemplate}>{itemNodes}</Picker>
       </View>
     );
@@ -235,7 +235,7 @@ class SummaryScreen extends Component {
             <Cell cellstyle="RightDetail" title="Set Time" detail={this.props.set_time_range} />
           </TableView>
         </View>
-        <Button style={styles.buttonBright} onPress={this.handlePress.bind(this)}>START MY WORKOUT</Button>
+        <Button style={styles.buttonPrimary} onPress={this.handlePress.bind(this)}>START MY WORKOUT</Button>
       </View>
     );
   }
@@ -316,20 +316,13 @@ class WorkoutFirstExerciseScreen extends Component {
   render () {
     return (
       <View style={styles.container}>
-        <View style={{width: 320}}>
-          <ScreenTitle text={this.props.name} />
-          <Timer alive={this.state.alive} max={this.props.max_time} />
-          <TableView style={styles.table}>
-            <Cell cellstyle="RightDetail" title="Target Time" detail={`${this.props.min_time}s–${this.props.max_time}s`} />
-            <Cell cellstyle="RightDetail" title="~ Weight" detail={this.props.weight} />
-            <Cell cellstyle="RightDetail" title="Reps" detail={this.props.rep_range} />
-          </TableView>
-        </View>
+        <ScreenTitle text={this.props.name} subtext={`${this.props.rep_range} Reps in ${this.props.min_time}–${this.props.max_time} Seconds`} />
+        <Timer alive={this.state.alive} max={this.props.max_time} />
         <Button
           style={this.state.start_time ? styles.buttonBright : styles.buttonPrimary}
           onPress={this.handlePress.bind(this)}
         >
-          {this.state.start_time ? 'FINISH' : 'START'} THIS SET
+          {this.state.start_time ? 'DONE' : 'START THIS SET'}
         </Button>
       </View>
     );
@@ -364,20 +357,13 @@ class WorkoutExerciseScreen extends Component {
   render () {
     return (
       <View style={styles.container}>
-        <View style={{width: 320}}>
-          <ScreenTitle text={this.props.name} />
-          <Timer alive={this.state.alive} max={this.props.max_time} />
-          <TableView style={styles.table}>
-            <Cell cellstyle="RightDetail" title="Target Time" detail={`${this.props.min_time}s–${this.props.max_time}s`} />
-            <Cell cellstyle="RightDetail" title="~ Weight" detail={this.props.weight} />
-            <Cell cellstyle="RightDetail" title="Reps" detail={this.props.rep_range} />
-          </TableView>
-        </View>
+        <ScreenTitle text={this.props.name} subtext={`${this.props.rep_range} Reps in ${this.props.min_time}–${this.props.max_time} Seconds`} />
+        <Timer alive={this.state.alive} max={this.props.max_time} />
         <Button
           style={styles.buttonBright}
           onPress={this.handlePress.bind(this)}
         >
-          FINISH THIS SET
+          DONE
         </Button>
       </View>
     );
@@ -428,11 +414,8 @@ class WorkoutRestScreen extends Component {
     return (
       <View style={styles.container}>
         <View style={{width: 320}}>
-          <ScreenTitle text={this.props.name} />
+          <ScreenTitle text={this.props.name} subtext={`For ${this.props.min_time / 60}–${this.props.max_time / 60} Minutes`} />
           <Timer alive={this.state.alive} max={this.props.max_time} />
-          <TableView style={styles.table}>
-            <Cell cellstyle="RightDetail" title="Rest Duration" detail={`${this.props.min_time / 60}–${this.props.max_time / 60} Minutes`} />
-          </TableView>
         </View>
 
         <View style={{width: 320}}>
@@ -453,7 +436,7 @@ class WorkoutRestScreen extends Component {
             <Cell cellstyle="RightDetail" title="Exercise" detail={this.props.upcomingStep.name} />
           </TableView>
           <Button
-            style={styles.buttonBright}
+            style={styles.buttonPrimary}
             onPress={this.handlePress.bind(this)}
           >
             START NEXT SET
@@ -472,19 +455,32 @@ class ScreenTitle extends Component {
   }
 
   render () {
+    var subtext = (this.props.subtext) ? <Text style={this.style().subtext}>
+      {this.props.subtext}
+    </Text> : null;
     return (
-      <Text style={this.style()}>{this.props.text.toUpperCase()}</Text>
+      <View style={{marginBottom: 15}}>
+        <Text style={this.style().main}>{this.props.text.toUpperCase()}</Text>
+        {subtext}
+      </View>
     );
   }
 
   style () {
     return {
-      marginBottom: 15,
-      color: '#333',
-      fontSize: 20,
-      fontWeight: '600',
-      textAlign: 'center',
-      // textTransform: 'uppercase',  // React Native doesn't support this
+      main: {
+        color: '#333',
+        fontSize: 20,
+        fontWeight: '600',
+        textAlign: 'center',
+      },
+      subtext: {
+        marginTop: 5,
+        color: '#333',
+        fontSize: 14,
+        fontStyle: 'italic',
+        textAlign: 'center',
+      }
     };
   }
 
@@ -621,7 +617,7 @@ const styles = StyleSheet.create({
   },
   buttonPrimary: {
     color: 'white',
-    backgroundColor: '#FFCC33',
+    backgroundColor: '#FF8533',
     borderRadius: 4,
     fontSize: 20,
     width: 320,
@@ -632,7 +628,7 @@ const styles = StyleSheet.create({
   },
   buttonBright: {
     color: 'white',
-    backgroundColor: '#FF8533',
+    backgroundColor: '#AD734C',
     borderRadius: 4,
     fontSize: 20,
     width: 320,
