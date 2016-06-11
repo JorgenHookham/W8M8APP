@@ -100,6 +100,23 @@ class W8M8 extends Component {
     }, 100);
   }
 
+  saveStep (step) {
+    var data = {
+      spreadsheet_id: this.state.workoutSheetId,
+      row_number: step.row_number,
+      actual_weight: step.actual_weight,
+      actual_reps: step.actual_reps,
+      actual_start_time: step.start_time,
+      actual_stop_time: step.stop_time,
+    };
+    // Real request
+    // TODO: Make sure this works
+    // var request = new XMLHttpRequest();
+    // request.open('PATCH', `http://w8m8.herokuapp.com/api/workouts/${this.state.workoutSheetId}/?format=json`);
+    // request.send(data);
+    console.log(data);
+  }
+
   handleBeginWorkout () {
     this.setState({stage: 5, startTime: new Date()});
   }
@@ -370,7 +387,6 @@ class WorkoutExerciseScreen extends Component {
 
 class WorkoutRestScreen extends Component {
   // TODO: Allow optional exercises (and subsequent rests) to be skipped
-  // TODO: Save data for previous exercise
 
   constructor (props) {
     super(props);
@@ -385,6 +401,9 @@ class WorkoutRestScreen extends Component {
       steps[i] = this.state;
       this.props.appScope.setState({steps: steps});
     }
+    if (this.state.complete && this.state.stop_time) {
+      this.props.appScope.saveStep(this.state);
+    }
   }
 
   componentDidMount () {
@@ -393,6 +412,16 @@ class WorkoutRestScreen extends Component {
 
   handlePress () {
     this.setState({stop_time: new Date(), complete: true, alive: false});
+    this.props.appScope.saveStep(this.props.previousStep);
+  }
+
+  handleChange (prop, e) {
+    var step = this.props.previousStep;
+    var steps = this.props.appScope.state.steps;
+    var i = steps.indexOf(step);
+    step[prop] = e.nativeEvent.text;
+    steps[i] = step;
+    this.props.appScope.setState({steps: steps});
   }
 
   render () {
@@ -410,11 +439,11 @@ class WorkoutRestScreen extends Component {
           <SubTitle text="Previous Set Data" />
           <View style={styles.horizontal}>
             <Text style={styles.label}>REPS</Text>
-            <TextInput style={styles.smallInput} />
+            <TextInput onChange={this.handleChange.bind(this, 'actual_reps')} style={styles.smallInput} />
           </View>
           <View style={styles.horizontal}>
             <Text style={styles.label}>WEIGHT</Text>
-            <TextInput style={styles.smallInput} />
+            <TextInput onChange={this.handleChange.bind(this, 'actual_weight')} style={styles.smallInput} />
           </View>
         </View>
 
