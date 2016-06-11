@@ -65,26 +65,39 @@ class W8M8 extends Component {
   handleWorkoutCreation () {
     this.setState({stage: 3});
     var app = this;
-    var request = new XMLHttpRequest();
-    var params = `template_sheet_id=${this.state.selectedTemplate}`
-    request.onload = (response) => {
-      var d = JSON.parse(response.target.responseText);
+    // Real request
+    // var request = new XMLHttpRequest();
+    // var params = `template_sheet_id=${this.state.selectedTemplate}`
+    // request.onload = (response) => {
+    //   var d = JSON.parse(response.target.responseText);
+    //   this.setState({workoutSheetId: d});
+    //   this.getWorkoutData();
+    // };
+    // request.open('POST', 'http://w8m8.herokuapp.com/api/workouts/?format=json');
+    // request.send(params);
+    // Mock request
+    setTimeout(() => {
+      var d = '';
       this.setState({workoutSheetId: d});
       this.getWorkoutData();
-    };
-    request.open('POST', 'http://w8m8.herokuapp.com/api/workouts/?format=json');
-    request.send(params);
+    }, 1000);
   }
 
   getWorkoutData () {
     var app = this;
-    var request = new XMLHttpRequest();
-    request.onload = (response) => {
-      var d = JSON.parse(response.currentTarget.responseText);
+    // Real request
+    // var request = new XMLHttpRequest();
+    // request.onload = (response) => {
+    //   var d = JSON.parse(response.currentTarget.responseText);
+    //   this.setState({stage: 4, summary: d.summary, steps: d.steps});
+    // };
+    // request.open('GET', `http://w8m8.herokuapp.com/api/workouts/${this.state.workoutSheetId}/?format=json`);
+    // request.send();
+    // Mock request
+    setTimeout(() => {
+      var d = workoutDataJSON;
       this.setState({stage: 4, summary: d.summary, steps: d.steps});
-    };
-    request.open('GET', `http://w8m8.herokuapp.com/api/workouts/${this.state.workoutSheetId}/?format=json`);
-    request.send();
+    }, 1000);
   }
 
   handleWorkoutConfirmation () {
