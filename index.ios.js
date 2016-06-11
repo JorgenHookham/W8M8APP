@@ -254,7 +254,6 @@ class SummaryScreen extends Component {
 
 class WorkoutFlow extends Component {
   // TODO: Develop workout-level progress component
-  // TODO: Handle the end of a workout
 
   constructor (props) {
     super(props);
