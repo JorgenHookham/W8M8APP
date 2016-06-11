@@ -431,10 +431,10 @@ class WorkoutRestScreen extends Component {
         </View>
 
         <View style={{width: 320}}>
-          <SubTitle text={(this.props.upcomingStep) ? `Next Set ${(this.props.upcomingStep.required) ? '' : '(Optional)'}` : 'Complete Workout'} />
-          {this.props.upcomingStep ? <TableView>
-            <Cell cellstyle="RightDetail" title="Exercise" detail={this.props.upcomingStep.name} />
-          </TableView> : null}
+          <View style={styles.horizontal}>
+            <SubTitle text={(this.props.upcomingStep) ? `Next ${(this.props.upcomingStep.required) ? '' : '(Optional)'}` : 'Complete Workout'} />
+            {this.props.upcomingStep ? <Text style={styles.giraffe}>{this.props.upcomingStep.name}</Text> : null}
+          </View>
           {actions}
         </View>
       </View>
@@ -513,14 +513,16 @@ class ScreenTitle extends Component {
     return {
       main: {
         color: '#333',
-        fontSize: 20,
+        fontFamily: 'Futura',
+        fontSize: 28,
         fontWeight: '600',
         textAlign: 'center',
       },
       subtext: {
         marginTop: 5,
-        color: '#333',
-        fontSize: 14,
+        color: '#66533D',
+        fontFamily: 'Futura',
+        fontSize: 20,
         fontStyle: 'italic',
         textAlign: 'center',
       }
@@ -545,7 +547,8 @@ class SubTitle extends Component {
   style () {
     return {
       marginBottom: 15,
-      fontSize: 16,
+      fontFamily: 'Futura',
+      fontSize: 20,
       fontWeight: '600',
     };
   }
@@ -598,7 +601,7 @@ class Timer extends Component {
     var style = {
       marginBottom: 15,
       color: '#333333',
-      fontFamily: 'courier new',
+      fontFamily: 'menlo',
       fontSize: 100,
       textAlign: 'center',
     };
@@ -621,13 +624,15 @@ class TheEndScreen extends Component {
 const styles = StyleSheet.create({
   canvas: {
     flex: 1,
-    backgroundColor: '#FFBB33',
+    backgroundColor: '#FFA033',
   },
   container: {
     flex: 1,
     justifyContent: 'space-between',
     paddingTop: 40,
     paddingBottom: 10,
+    paddingLeft: 5,
+    paddingRight: 5,
     alignItems: 'center',
   },
   splashContainer: {
@@ -652,6 +657,7 @@ const styles = StyleSheet.create({
     color: 'white',
     backgroundColor: '#FFC552',
     borderRadius: 4,
+    fontFamily: 'Futura',
     fontSize: 20,
     width: 320,
     height: 50,
@@ -661,9 +667,10 @@ const styles = StyleSheet.create({
     lineHeight: 32,
   },
   buttonInactive: {
-    color: '#D99F2B',
-    backgroundColor: '#F2B230',
+    color: '#CCBDB4',
+    backgroundColor: '#E6D5CA',
     borderRadius: 4,
+    fontFamily: 'Futura',
     fontSize: 20,
     width: 320,
     height: 50,
@@ -674,8 +681,9 @@ const styles = StyleSheet.create({
   },
   buttonPrimary: {
     color: 'white',
-    backgroundColor: '#FF8533',
+    backgroundColor: '#FF8800',
     borderRadius: 4,
+    fontFamily: 'Futura',
     fontSize: 20,
     width: 320,
     height: 50,
@@ -686,8 +694,9 @@ const styles = StyleSheet.create({
   },
   buttonBright: {
     color: 'white',
-    backgroundColor: '#AD734C',
+    backgroundColor: '#333',
     borderRadius: 4,
+    fontFamily: 'Futura',
     fontSize: 20,
     width: 320,
     height: 50,
@@ -721,6 +730,13 @@ const styles = StyleSheet.create({
     marginLeft: 10,
     backgroundColor: 'white',
     textAlign: 'center',
+  },
+  giraffe: {
+    marginBottom: 15,
+    color: '#66533D',
+    fontFamily: 'Futura',
+    fontSize: 20,
+    fontWeight: '600',
   },
 });
 
