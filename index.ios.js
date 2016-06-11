@@ -178,7 +178,7 @@ class SetupScreen extends Component {
     return (
       <View>
         <ScreenTitle text="Select Workout Template" />
-        <Button style={(this.props.selectedTemplate) ? styles.buttonActive : styles.buttonInactive} onPress={this.onPress.bind(this)}>BEGIN</Button>
+        <Button style={(this.props.selectedTemplate) ? styles.buttonBright : styles.buttonInactive} onPress={this.onPress.bind(this)}>BEGIN</Button>
         <Picker style={styles.picker} onValueChange={this.onChange.bind(this)} selectedValue={this.props.selectedTemplate}>{itemNodes}</Picker>
       </View>
     );
@@ -218,13 +218,15 @@ class SummaryScreen extends Component {
             <Cell cellstyle="RightDetail" title="Set Time" detail={this.props.set_time_range} />
           </TableView>
         </View>
-        <Button style={styles.buttonActive} onPress={this.handlePress.bind(this)}>START MY WORKOUT</Button>
+        <Button style={styles.buttonBright} onPress={this.handlePress.bind(this)}>START MY WORKOUT</Button>
       </View>
     );
   }
 }
 
 class WorkoutFlow extends Component {
+  // TODO: Develop workout-level progress component
+  // TODO: Handle the end of a workout
 
   constructor (props) {
     super(props);
@@ -307,7 +309,7 @@ class WorkoutFirstExerciseScreen extends Component {
           </TableView>
         </View>
         <Button
-          style={this.state.start_time ? styles.buttonPorno : styles.buttonActive}
+          style={this.state.start_time ? styles.buttonBright : styles.buttonPrimary}
           onPress={this.handlePress.bind(this)}
         >
           {this.state.start_time ? 'FINISH' : 'START'} THIS SET
@@ -355,7 +357,7 @@ class WorkoutExerciseScreen extends Component {
           </TableView>
         </View>
         <Button
-          style={styles.buttonPorno}
+          style={styles.buttonBright}
           onPress={this.handlePress.bind(this)}
         >
           FINISH THIS SET
@@ -367,6 +369,8 @@ class WorkoutExerciseScreen extends Component {
 }
 
 class WorkoutRestScreen extends Component {
+  // TODO: Allow optional exercises (and subsequent rests) to be skipped
+  // TODO: Save data for previous exercise
 
   constructor (props) {
     super(props);
@@ -420,7 +424,7 @@ class WorkoutRestScreen extends Component {
             <Cell cellstyle="RightDetail" title="Exercise" detail={this.props.upcomingStep.name} />
           </TableView>
           <Button
-            style={styles.buttonPorno}
+            style={styles.buttonBright}
             onPress={this.handlePress.bind(this)}
           >
             START NEXT SET
@@ -564,7 +568,29 @@ const styles = StyleSheet.create({
     width: 320,
     height: 68,
   },
-  buttonActive: {
+  buttonSecondary: {
+    color: 'white',
+    backgroundColor: '#FFC552',
+    borderRadius: 4,
+    fontSize: 20,
+    width: 320,
+    height: 40,
+    marginTop: 40,
+    marginBottom: 40,
+    lineHeight: 32,
+  },
+  buttonInactive: {
+    color: '#D99F2B',
+    backgroundColor: '#F2B230',
+    borderRadius: 4,
+    fontSize: 20,
+    width: 320,
+    height: 40,
+    marginTop: 40,
+    marginBottom: 40,
+    lineHeight: 32,
+  },
+  buttonPrimary: {
     color: 'white',
     backgroundColor: '#FFCC33',
     borderRadius: 4,
@@ -575,20 +601,9 @@ const styles = StyleSheet.create({
     marginBottom: 40,
     lineHeight: 32,
   },
-  buttonInactive: {
-    color: '#F0E6D3',
-    backgroundColor: '#E0D7C5',
-    borderRadius: 4,
-    fontSize: 20,
-    width: 320,
-    height: 40,
-    marginTop: 40,
-    marginBottom: 40,
-    lineHeight: 32,
-  },
-  buttonPorno: {
+  buttonBright: {
     color: 'white',
-    backgroundColor: 'green',
+    backgroundColor: '#FF8533',
     borderRadius: 4,
     fontSize: 20,
     width: 320,
