@@ -141,32 +141,26 @@ class W8M8 extends Component {
   }
 
   render () {
-    var splash = (this.state.stage == 1) ? <View style={styles.container} key={0}>
-      <SplashScreen />
-    </View> : null;
-    var setup = (this.state.stage == 2) ? <View style={styles.container} key={1}>
-      <SetupScreen {...this.state}
-        handleTemplateSelection={this.handleTemplateSelection.bind(this)}
-        handleWorkoutCreation={this.handleWorkoutCreation.bind(this)}
-      />
-    </View> : null;
-    var loading = (this.state.stage == 3) ? <View style={styles.container} key={2}>
-      <LoadingScreen message="Please wait while your workout log sheet is created." />
-    </View> : null;
-    var summary = (this.state.stage == 4) ? <View style={styles.container} key={3}>
-      <SummaryScreen {...this.state.summary}
-        handleBeginWorkout={this.handleBeginWorkout.bind(this)}
-      />
-    </View> : null;
-    var workoutFlow = (this.state.stage == 5) ? <View style={styles.container} key={4}>
-      <WorkoutFlow steps={this.state.steps} appScope={this} />
-    </View> : null;
-    var screens = [splash, setup, loading, summary, workoutFlow];
-    return (
-      <View style={styles.container}>
-        {screens}
-      </View>
-    );
+    var splash = (this.state.stage == 1) ? <SplashScreen key={0} /> : null;
+    var setup = (this.state.stage == 2) ? <SetupScreen key={1} {...this.state}
+      handleTemplateSelection={this.handleTemplateSelection.bind(this)}
+      handleWorkoutCreation={this.handleWorkoutCreation.bind(this)}
+    /> : null;
+    var loading = (this.state.stage == 3) ? <LoadingScreen key={2}
+      message="Please wait while your workout log sheet is created."
+    />: null;
+    var summary = (this.state.stage == 4) ? <SummaryScreen key={3}
+      {...this.state.summary}
+      handleBeginWorkout={this.handleBeginWorkout.bind(this)}
+      first_exercise_name={this.state.steps[0].name}
+    /> : null;
+    var workoutFlow = (this.state.stage == 5) ? <WorkoutFlow key={4}
+      steps={this.state.steps}
+      appScope={this}
+    /> : null;
+    var theEnd = (this.state.stage == 6) ? <TheEndScreen key={5} />: null;
+    var screens = [splash, setup, loading, summary, workoutFlow, theEnd];
+    return <View style={styles.canvas}>{screens}</View>;
   }
 
 }
@@ -204,7 +198,7 @@ class SetupScreen extends Component {
     });
     itemNodes.splice(0, 0, <Picker.Item label="Select a workout" value={null} key={0} />)
     return (
-      <View>
+      <View style={styles.splashContainer}>
         <ScreenTitle text="Select Workout Template" />
         <Button style={(this.props.selectedTemplate) ? styles.buttonPrimary : styles.buttonInactive} onPress={this.onPress.bind(this)}>BEGIN</Button>
         <Picker style={styles.picker} onValueChange={this.onChange.bind(this)} selectedValue={this.props.selectedTemplate}>{itemNodes}</Picker>
@@ -246,6 +240,12 @@ class SummaryScreen extends Component {
             <Cell cellstyle="RightDetail" title="Set Time" detail={this.props.set_time_range} />
           </TableView>
         </View>
+        <View style={{width: 320}}>
+          <SubTitle text="First Exercise" />
+          <TableView style={styles.table}>
+            <Cell cellstyle="RightDetail" title="Exercise" detail={this.props.first_exercise_name} />
+          </TableView>
+        </View>
         <Button style={styles.buttonPrimary} onPress={this.handlePress.bind(this)}>START MY WORKOUT</Button>
       </View>
     );
@@ -267,76 +267,47 @@ class WorkoutFlow extends Component {
         return step;
       }
     }
+    return null;
   }
 
   getPreviousStep () {
+    var steps = this.props.steps;
     var currentStep = this.getCurrentStep();
-    var i = this.props.steps.indexOf(currentStep);
-    return this.props.steps[i - 1];
+    if (currentStep) {
+      var i = steps.indexOf(currentStep);
+      return steps[i - 1];
+    } else {
+      return steps[steps.length - 1];
+    }
   }
 
   getUpcomingStep () {
     var currentStep = this.getCurrentStep();
-    var i = this.props.steps.indexOf(currentStep);
-    return this.props.steps[i + 1];
+    if (currentStep) {
+      var i = this.props.steps.indexOf(currentStep);
+      return this.props.steps[i + 1];
+    } else {
+      return null;
+    }
   }
 
   render () {
     var currentStep = this.getCurrentStep();
-    if (this.props.steps.indexOf(currentStep) == 0) {
-      var Step = WorkoutFirstExerciseScreen;
-    } else {
+    if (currentStep) {
       var Step = (currentStep.name == 'Rest') ? WorkoutRestScreen : WorkoutExerciseScreen;
-    }
-    return (
-      <Step {...currentStep}
-        previousStep={this.getPreviousStep()}
-        upcomingStep={this.getUpcomingStep()}
-        appScope={this.props.appScope}
-      />
-    );
-  }
-}
-
-class WorkoutFirstExerciseScreen extends Component {
-
-  constructor (props) {
-    super(props);
-    this.state = props;
-    this.state.complete = false;
-    this.state.alive = false;
-  }
-
-  componentDidUpdate (prevProps, prevState) {
-    if (this.state.start_time != prevState.start_time || this.state.stop_time != prevState.stop_time) {
-      var i = this.props.appScope.indexOfStepByRow(this.props.row_number);
-      var steps = this.props.appScope.state.steps;
-      steps[i] = this.state;
-      this.props.appScope.setState({steps: steps});
-    }
-  }
-
-  handlePress () {
-    if (this.state.start_time) {
-      this.setState({stop_time: new Date(), complete: true, alive: false});
+      return (
+        <Step {...currentStep}
+          previousStep={this.getPreviousStep()}
+          upcomingStep={this.getUpcomingStep()}
+          appScope={this.props.appScope}
+        />
+      );
     } else {
-      this.setState({alive: true, start_time: new Date()});
+      return <FinalWorkoutScreen
+        appScope={this.props.appScope}
+        previousStep={this.getPreviousStep()}
+      />;
     }
-  }
-
-  render () {
-    return (
-      <View style={styles.container}>
-        <ScreenTitle text={this.props.name} subtext={`${this.props.rep_range} Reps in ${this.props.min_time}–${this.props.max_time} Seconds`} />
-        <Timer alive={this.state.alive} max={this.props.max_time} />
-        <Button
-          style={this.state.start_time ? styles.buttonBright : styles.buttonPrimary}
-          onPress={this.handlePress.bind(this)}
-        >
-          {this.state.start_time ? 'DONE' : 'START THIS SET'}
-        </Button>
-      </View>
-    );
   }
 }
 
@@ -409,6 +380,9 @@ class WorkoutRestScreen extends Component {
   handlePress () {
     this.setState({stop_time: new Date(), complete: true, alive: false});
     this.props.appScope.saveStep(this.props.previousStep);
+    if (!this.props.upcomingStep) {
+      this.props.appScope.setState({stage: 6});
+    }
   }
 
   handleChange (prop, e) {
@@ -426,13 +400,17 @@ class WorkoutRestScreen extends Component {
 
   render () {
     var actions;
-    if (this.props.upcomingStep.required) {
-      actions = <Button style={styles.buttonPrimary}onPress={this.handlePress.bind(this)}>START NEXT SET</Button>
+    if  (this.props.upcomingStep) {
+      if (this.props.upcomingStep.required) {
+        actions = <Button style={styles.buttonPrimary} onPress={this.handlePress.bind(this)}>START NEXT SET</Button>
+      } else {
+        actions = <View>
+          <Button style={styles.buttonSecondary} onPress={this.handleSkip.bind(this, this.props.upcomingStep)}>SKIP REMAINING SETS</Button>
+          <Button style={styles.buttonPrimary} onPress={this.handlePress.bind(this)}>START NEXT SET</Button>
+        </View>;
+      }
     } else {
-      actions = <View>
-        <Button style={styles.buttonSecondary} onPress={this.handleSkip.bind(this, this.props.upcomingStep)}>SKIP REMAINING SETS</Button>
-        <Button style={styles.buttonPrimary} onPress={this.handlePress.bind(this)}>START NEXT SET</Button>
-      </View>;
+      actions = <Button style={styles.buttonBright} onPress={this.handlePress.bind(this)}>DONE</Button>
     }
     return (
       <View style={styles.container}>
@@ -454,11 +432,59 @@ class WorkoutRestScreen extends Component {
         </View>
 
         <View style={{width: 320}}>
-          <SubTitle text={`Next Set ${(this.props.upcomingStep.required) ? '' : '(Optional)'}`} />
-          <TableView>
+          <SubTitle text={(this.props.upcomingStep) ? `Next Set ${(this.props.upcomingStep.required) ? '' : '(Optional)'}` : 'Complete Workout'} />
+          {this.props.upcomingStep ? <TableView>
             <Cell cellstyle="RightDetail" title="Exercise" detail={this.props.upcomingStep.name} />
-          </TableView>
+          </TableView> : null}
           {actions}
+        </View>
+      </View>
+    );
+  }
+}
+
+class FinalWorkoutScreen extends Component {
+
+  constructor (props) {
+    super(props);
+    this.state = {};
+  }
+
+  handlePress () {
+    this.props.appScope.saveStep(this.props.previousStep);
+    this.props.appScope.setState({stage: 6});
+  }
+
+  handleChange (prop, e) {
+    var step = this.props.previousStep;
+    var steps = this.props.appScope.state.steps;
+    var i = steps.indexOf(step);
+    step[prop] = e.nativeEvent.text;
+    steps[i] = step;
+    this.props.appScope.setState({steps: steps});
+  }
+
+  render () {
+    return (
+      <View style={styles.splashContainer}>
+        <View style={{width: 320}}>
+          <ScreenTitle text="Workout Complete" />
+        </View>
+
+        <View style={{width: 320}}>
+          <SubTitle text="Previous Set Data" />
+          <View style={styles.horizontal}>
+            <Text style={styles.label}>REPS</Text>
+            <TextInput onChange={this.handleChange.bind(this, 'actual_reps')} style={styles.smallInput} />
+          </View>
+          <View style={styles.horizontal}>
+            <Text style={styles.label}>WEIGHT</Text>
+            <TextInput onChange={this.handleChange.bind(this, 'actual_weight')} style={styles.smallInput} />
+          </View>
+        </View>
+
+        <View style={{width: 320}}>
+          <Button style={styles.buttonBright} onPress={this.handlePress.bind(this)}>DONE</Button>
         </View>
       </View>
     );
@@ -583,21 +609,32 @@ class Timer extends Component {
   }
 }
 
+class TheEndScreen extends Component {
+  render () {
+    return (
+      <View style={{flex: 1, alignItems: 'center'}}>
+        <Image source={require('./images/success.png')} style={{flex: 1}} resizeMode={'contain'} />
+      </View>
+    );
+  }
+}
+
 const styles = StyleSheet.create({
+  canvas: {
+    flex: 1,
+    backgroundColor: '#FFBB33',
+  },
   container: {
     flex: 1,
     justifyContent: 'space-between',
+    paddingTop: 40,
+    paddingBottom: 10,
     alignItems: 'center',
-    paddingTop: 15,
-    paddingBottom: 5,
-    backgroundColor: '#FFBB33',
   },
   splashContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    paddingTop: 20,
-    backgroundColor: '#FFBB33',
   },
   splashImage: {
     width: 320,
