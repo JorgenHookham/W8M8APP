@@ -595,8 +595,8 @@ class Timer extends Component {
       fontSize: 100,
       textAlign: 'center',
     };
-    if (max && elapsed > max) style.color = 'red';
-    else if (max && elapsed > max - max * .2) style.color = 'orange';
+    if (max && elapsed > max) style.color = '#FF3300';
+    else if (max && elapsed > max - max * .2) style.color = '#AD4500';
     return style;
   }
 }
