@@ -14,7 +14,6 @@ import {
   TextInput,
   View
 } from 'react-native';
-
 import Button from 'react-native-button';
 
 const {
@@ -183,19 +182,14 @@ class SetupScreen extends Component {
   }
 
   render () {
-    var i = 0;
     var itemNodes = this.props.workoutTemplates.map((templateTuple) => {
-      i++;
-      return (
-        <Picker.Item label={templateTuple[1]} value={templateTuple[0]} key={i} />
-      );
+      return <Picker.Item label={templateTuple[1]} value={templateTuple[0]} key={templateTuple[0]} />;
     });
-    itemNodes.splice(0, 0, <Picker.Item label="Select a workout" value={null} key={0} />)
     return (
-      <View style={styles.splashContainer}>
-        <ScreenTitle text="Select Workout Template" />
-        <Button style={(this.props.selectedTemplate) ? styles.buttonPrimary : styles.buttonInactive} onPress={this.onPress.bind(this)}>BEGIN</Button>
+      <View style={styles.container}>
+        <ScreenTitle text="Choose A Workout" />
         <Picker style={styles.picker} onValueChange={this.onChange.bind(this)} selectedValue={this.props.selectedTemplate}>{itemNodes}</Picker>
+        <Button style={(this.props.selectedTemplate) ? styles.buttonPrimary : styles.buttonInactive} onPress={this.onPress.bind(this)}>BEGIN</Button>
       </View>
     );
   }
@@ -652,7 +646,7 @@ const styles = StyleSheet.create({
   },
   picker: {
     width: 320,
-    height: 68,
+    height: 240,
   },
   buttonSecondary: {
     color: 'white',
