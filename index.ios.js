@@ -213,7 +213,7 @@ class SummaryScreen extends Component {
     return (
       <View style={styles.container}>
         <ScreenTitle text="Workout Summary" />
-        <View style={{width: 320}}>
+        <View style={{width: 300}}>
           <Cell label="~ Duration" value={this.props.approx_duration} />
           <Cell label="Mucle Groups" value={this.props.muscle_groups} />
           <Cell label="Reps" value={this.props.rep_range} />
@@ -223,7 +223,7 @@ class SummaryScreen extends Component {
           <Cell label="Rest" value={this.props.rest_time_range} />
           <Cell label="Set Time" value={this.props.set_time_range} />
         </View>
-        <View style={{width: 320}}>
+        <View style={{width: 300}}>
           <Cell label="First Set" value={this.props.first_exercise_name} />
           <Button style={styles.buttonPrimary} onPress={this.handlePress.bind(this)}>START MY WORKOUT</Button>
         </View>
@@ -405,18 +405,19 @@ class WorkoutRestScreen extends Component {
     }
     return (
       <View style={styles.container}>
-        <View style={{width: 320}}>
+        <View style={{width: 300}}>
           <ScreenTitle text={this.props.name} subtext={`For ${this.props.min_time / 60}–${this.props.max_time / 60} Minutes`} />
           <Timer alive={this.state.alive} max={this.props.max_time} />
         </View>
 
-        <View style={{width: 320}}>
+        <View style={{width: 300}}>
           <SubTitle text="Previous Set Data" />
           <View style={styles.horizontal}>
             <View>
               <Text style={styles.label}>REPS</Text>
               <TextInput
-                keyboardType="number-pad"
+                // keyboardType="number-pad"
+                returnKeyType={'done'}
                 onChange={this.handleChange.bind(this, 'actual_reps')}
                 style={(this.state.hasChangedReps) ? styles.smallInputEmpty : styles.smallInput}
                 value={this.props.previousStep.actual_reps}
@@ -425,7 +426,8 @@ class WorkoutRestScreen extends Component {
             <View>
               <Text style={styles.label}>WEIGHT</Text>
               <TextInput
-                keyboardType="number-pad"
+                // keyboardType="number-pad"
+                returnKeyType={'done'}
                 onChange={this.handleChange.bind(this, 'actual_weight')}
                 style={(this.state.hasChangedWeight) ? styles.smallInputEmpty : styles.smallInput}
                 value={this.props.previousStep.actual_weight}
@@ -434,7 +436,7 @@ class WorkoutRestScreen extends Component {
           </View>
         </View>
 
-        <View style={{width: 320}}>
+        <View style={{width: 300}}>
           <Cell
             label={(this.props.upcomingStep) ? `Next Set ${(this.props.upcomingStep.required) ? '' : '(Optional)'}` : 'Complete Workout'}
             value={this.props.upcomingStep ? this.props.upcomingStep.name : null}
@@ -474,11 +476,11 @@ class FinalWorkoutScreen extends Component {
   render () {
     return (
       <View style={styles.splashContainer}>
-        <View style={{width: 320}}>
+        <View style={{width: 300}}>
           <ScreenTitle text="Workout Complete" />
         </View>
 
-        <View style={{width: 320}}>
+        <View style={{width: 300}}>
           <SubTitle text="Previous Set Data" />
           <View style={styles.horizontal}>
             <Text style={styles.label}>REPS</Text>
@@ -500,7 +502,7 @@ class FinalWorkoutScreen extends Component {
           </View>
         </View>
 
-        <View style={{width: 320}}>
+        <View style={{width: 300}}>
           <Button style={styles.buttonBright} onPress={this.handlePress.bind(this)}>DONE</Button>
         </View>
       </View>
@@ -532,7 +534,7 @@ class ScreenTitle extends Component {
       main: {
         color: '#333',
         fontFamily: 'Futura',
-        fontSize: 28,
+        fontSize: 24,
         fontWeight: '600',
         textAlign: 'center',
       },
@@ -621,7 +623,7 @@ class Timer extends Component {
       marginBottom: 15,
       color: '#FFCCAA',
       fontFamily: 'menlo',
-      fontSize: 100,
+      fontSize: 90,
       textAlign: 'center',
     };
     if (max && elapsed > max) style.color = '#FF3333';
@@ -707,8 +709,8 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingTop: 40,
     paddingBottom: 10,
-    paddingLeft: 5,
-    paddingRight: 5,
+    paddingLeft: 10,
+    paddingRight: 10,
     alignItems: 'center',
   },
   splashContainer: {
@@ -735,7 +737,7 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     fontFamily: 'Futura',
     fontSize: 20,
-    width: 320,
+    width: 300,
     height: 50,
     marginTop: 10,
     paddingTop: 5,
@@ -748,7 +750,7 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     fontFamily: 'Futura',
     fontSize: 20,
-    width: 320,
+    width: 300,
     height: 50,
     marginTop: 10,
     paddingTop: 5,
@@ -761,7 +763,7 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     fontFamily: 'Futura',
     fontSize: 20,
-    width: 320,
+    width: 300,
     height: 50,
     marginTop: 10,
     paddingTop: 5,
@@ -774,7 +776,7 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     fontFamily: 'Futura',
     fontSize: 20,
-    width: 320,
+    width: 300,
     height: 50,
     marginTop: 10,
     paddingTop: 5,
@@ -782,13 +784,13 @@ const styles = StyleSheet.create({
     lineHeight: 32,
   },
   textInput: {
-    width: 320,
+    width: 300,
     height: 40,
     backgroundColor: 'white',
     color: '#666666',
   },
   table: {
-    width: 320,
+    width: 300,
   },
   horizontal: {
     flex: 1,
@@ -804,7 +806,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   smallInput: {
-    width: 155,
+    width: 145,
     height: 40,
     marginTop: 0,
     color: '#CCC',
@@ -814,7 +816,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   smallInputEmpty: {
-    width: 155,
+    width: 145,
     height: 40,
     marginTop: 0,
     color: '#66533D',
