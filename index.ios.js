@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import {
+  Animated,
   AppRegistry,
   Image,
   Picker,
@@ -37,12 +38,12 @@ class W8M8 extends Component {
 
   requestWorkoutTemplates (onload) {
     // Real request
-    // var request = new XMLHttpRequest();
-    // request.onload = onload.bind(this, request);
-    // request.open('GET', 'http://w8m8.herokuapp.com/api/workout-templates/?format=json');
-    // request.send();
+    var request = new XMLHttpRequest();
+    request.onload = onload.bind(this, request);
+    request.open('GET', 'http://w8m8.herokuapp.com/api/workout-templates/?format=json');
+    request.send();
     // Mock request
-    setTimeout(onload.bind(this, workoutTemplatesJSON), 2000);
+    // setTimeout(onload.bind(this, workoutTemplatesJSON), 2000);
   }
 
   handleTemplateSelection (selectedTemplate) {
@@ -53,39 +54,39 @@ class W8M8 extends Component {
     this.setState({stage: 3, loadingMessage: 'Creating workout sheet...'});
     var app = this;
     // Real request
-    // var request = new XMLHttpRequest();
-    // var params = `template_sheet_id=${this.state.selectedTemplate}`
-    // request.onload = (response) => {
-    //   var d = JSON.parse(response.target.responseText);
-    //   this.setState({workoutSheetId: d});
-    //   this.getWorkoutData();
-    // };
-    // request.open('POST', 'http://w8m8.herokuapp.com/api/workouts/?format=json');
-    // request.send(params);
-    // Mock request
-    setTimeout(() => {
-      var d = '';
+    var request = new XMLHttpRequest();
+    var params = `template_sheet_id=${this.state.selectedTemplate}`
+    request.onload = (response) => {
+      var d = JSON.parse(response.target.responseText);
       this.setState({workoutSheetId: d});
       this.getWorkoutData();
-    }, 2000);
+    };
+    request.open('POST', 'http://w8m8.herokuapp.com/api/workouts/?format=json');
+    request.send(params);
+    // Mock request
+    // setTimeout(() => {
+    //   var d = '';
+    //   this.setState({workoutSheetId: d});
+    //   this.getWorkoutData();
+    // }, 2000);
   }
 
   getWorkoutData () {
     var app = this;
     this.setState({loadingMessage: 'Fetching workout data...'});
     // Real request
-    // var request = new XMLHttpRequest();
-    // request.onload = (response) => {
-    //   var d = JSON.parse(response.currentTarget.responseText);
-    //   this.setState({stage: 4, summary: d.summary, steps: d.steps});
-    // };
-    // request.open('GET', `http://w8m8.herokuapp.com/api/workouts/${this.state.workoutSheetId}/?format=json`);
-    // request.send();
-    // Mock request
-    setTimeout(() => {
-      var d = JSON.parse(workoutDataJSON.responseText);
+    var request = new XMLHttpRequest();
+    request.onload = (response) => {
+      var d = JSON.parse(response.currentTarget.responseText);
       this.setState({stage: 4, summary: d.summary, steps: d.steps});
-    }, 2000);
+    };
+    request.open('GET', `http://w8m8.herokuapp.com/api/workouts/${this.state.workoutSheetId}/?format=json`);
+    request.send();
+    // Mock request
+    // setTimeout(() => {
+    //   var d = JSON.parse(workoutDataJSON.responseText);
+    //   this.setState({stage: 4, summary: d.summary, steps: d.steps});
+    // }, 2000);
   }
 
   saveStep (step) {
@@ -94,15 +95,15 @@ class W8M8 extends Component {
       row_number: step.row_number,
       actual_weight: step.actual_weight,
       actual_reps: step.actual_reps,
-      actual_start_time: step.start_time,
-      actual_stop_time: step.stop_time,
+      actual_start_time: `${step.start_time.getHours()}:${step.start_time.getMinutes()}:${step.start_time.getSeconds()}`,
+      actual_stop_time: `${step.stop_time.getHours()}:${step.stop_time.getMinutes()}:${step.stop_time.getSeconds()}`,
+      actual_duration: Math.round((step.stop_time - step.start_time) / 1000)
     };
     // Real request
-    // TODO: Make sure this works
-    // var request = new XMLHttpRequest();
-    // request.open('PATCH', `http://w8m8.herokuapp.com/api/workouts/${this.state.workoutSheetId}/?format=json`);
-    // request.send(data);
-    console.log(data);
+    var request = new XMLHttpRequest();
+    request.open('PATCH', 'http://localhost:8000/api/workouts/?format=json');
+    request.setRequestHeader('Content-Type', 'application/json');
+    request.send(JSON.stringify(data));
   }
 
   handleBeginWorkout () {
@@ -158,7 +159,7 @@ class SplashScreen extends Component {
     return (
       <View style={styles.splashContainer}>
         <Image style={styles.splashImage} source={require('./images/splash.png')} resizeMode={'contain'}></Image>
-        <Image style={styles.loader} source={require('./images/gears.gif')} resizeMode={'contain'}></Image>
+        <Loader />
       </View>
     );
   }
@@ -195,7 +196,7 @@ class LoadingScreen extends Component {
   render () {
     return (
       <View style={styles.splashContainer}>
-        <Image style={styles.loader} source={require('./images/gears.gif')} resizeMode={'contain'}></Image>
+        <Loader />
         <Text style={{marginTop: 15}}>{this.props.message}</Text>
       </View>
     );
@@ -645,6 +646,52 @@ class Cell extends Component {
       <View style={styles.cell}>
         <Text style={styles.cellLabel}>{this.props.label.toUpperCase()}</Text>
         <Text style={styles.cellValue}>{this.props.value}</Text>
+      </View>
+    );
+  }
+}
+
+class Loader extends Component {
+
+  constructor (props) {
+    super(props);
+    this.state = {rotation: 0};
+  }
+
+  componentDidMount () {
+    // this.animate();
+  }
+
+  componentDidUnMount () {
+    clearInterval(this.timer);
+  }
+
+  animate () {
+    var component = this;
+    var duration = 3000;
+    var interval = 10;
+    var timer = setInterval(() => {
+      var newRotation = component.state.rotation + (360 / duration / interval * 100);
+      newRotation = (newRotation < 360) ? newRotation : 0;
+      console.log(component.state.rotation, newRotation);
+      component.setState({rotation: newRotation});
+    }, interval);
+    this.setState({timer: timer});
+  }
+
+  render () {
+    return (
+      <View style={{position: 'relative', width: 66, height: 66}}>
+        <Animated.Image
+          style={{width: 40, height: 40, transform: [{rotate: `${this.state.rotation * -1}deg`}]}}
+          source={require('./images/light-gear.png')}
+          resizeMode="contain"
+        />
+        <Animated.Image
+          style={{width: 40, height: 40, position: 'absolute', top: 26, left: 26, transform: [{rotate: `${this.state.rotation + 15}deg`}]}}
+          source={require('./images/dark-gear.png')}
+          resizeMode="contain"
+        />
       </View>
     );
   }
