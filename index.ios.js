@@ -1,9 +1,3 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- * @flow
- */
-
 import React, { Component } from 'react';
 import {
   AppRegistry,
@@ -48,7 +42,7 @@ class W8M8 extends Component {
     // request.open('GET', 'http://w8m8.herokuapp.com/api/workout-templates/?format=json');
     // request.send();
     // Mock request
-    setTimeout(onload.bind(this, workoutTemplatesJSON), 100);
+    setTimeout(onload.bind(this, workoutTemplatesJSON), 2000);
   }
 
   handleTemplateSelection (selectedTemplate) {
@@ -56,7 +50,7 @@ class W8M8 extends Component {
   }
 
   handleWorkoutCreation () {
-    this.setState({stage: 3});
+    this.setState({stage: 3, loadingMessage: 'Creating workout sheet...'});
     var app = this;
     // Real request
     // var request = new XMLHttpRequest();
@@ -73,11 +67,12 @@ class W8M8 extends Component {
       var d = '';
       this.setState({workoutSheetId: d});
       this.getWorkoutData();
-    }, 100);
+    }, 2000);
   }
 
   getWorkoutData () {
     var app = this;
+    this.setState({loadingMessage: 'Fetching workout data...'});
     // Real request
     // var request = new XMLHttpRequest();
     // request.onload = (response) => {
@@ -90,7 +85,7 @@ class W8M8 extends Component {
     setTimeout(() => {
       var d = JSON.parse(workoutDataJSON.responseText);
       this.setState({stage: 4, summary: d.summary, steps: d.steps});
-    }, 100);
+    }, 2000);
   }
 
   saveStep (step) {
@@ -140,7 +135,7 @@ class W8M8 extends Component {
       handleWorkoutCreation={this.handleWorkoutCreation.bind(this)}
     /> : null;
     var loading = (this.state.stage == 3) ? <LoadingScreen key={2}
-      message="Please wait while your workout log sheet is created."
+      message={this.state.loadingMessage}
     />: null;
     var summary = (this.state.stage == 4) ? <SummaryScreen key={3}
       {...this.state.summary}
@@ -199,9 +194,9 @@ class SetupScreen extends Component {
 class LoadingScreen extends Component {
   render () {
     return (
-      <View style={styles.container}>
-        <Text>{this.props.message}</Text>
+      <View style={styles.splashContainer}>
         <Image style={styles.loader} source={require('./images/gears.gif')} resizeMode={'contain'}></Image>
+        <Text style={{marginTop: 15}}>{this.props.message}</Text>
       </View>
     );
   }
