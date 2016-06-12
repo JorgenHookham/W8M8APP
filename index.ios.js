@@ -671,7 +671,7 @@ const styles = StyleSheet.create({
   },
   splashImage: {
     width: 320,
-    height: 320,
+    height: 416,
     marginBottom: 40,
   },
   loader: {
