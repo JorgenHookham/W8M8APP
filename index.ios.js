@@ -468,6 +468,8 @@ class FinalWorkoutScreen extends Component {
     var step = this.props.previousStep;
     var steps = this.props.appScope.state.steps;
     var i = steps.indexOf(step);
+    if (prop == 'actual_reps') this.setState({hasChangedReps: true});
+    if (prop == 'actual_weight') this.setState({hasChangedWeight: true});
     step[prop] = e.nativeEvent.text;
     steps[i] = step;
     this.props.appScope.setState({steps: steps});
@@ -484,13 +486,21 @@ class FinalWorkoutScreen extends Component {
           <SubTitle text="Previous Set Data" />
           <View style={styles.horizontal}>
             <Text style={styles.label}>REPS</Text>
-            <TextInput onChange={this.handleChange.bind(this, 'actual_reps')} style={styles.smallInput} />
-            // TODO: Update based on recent changes
+            <TextInput
+              keyboardType="number-pad"
+              onChange={this.handleChange.bind(this, 'actual_reps')}
+              style={(this.state.hasChangedReps) ? styles.smallInputEmpty : styles.smallInput}
+              value={this.props.previousStep.actual_reps}
+            />
           </View>
           <View style={styles.horizontal}>
             <Text style={styles.label}>WEIGHT</Text>
-            <TextInput onChange={this.handleChange.bind(this, 'actual_weight')} style={styles.smallInput} />
-            // TODO: Update based on recent changes
+            <TextInput
+              keyboardType="number-pad"
+              onChange={this.handleChange.bind(this, 'actual_weight')}
+              style={(this.state.hasChangedReps) ? styles.smallInputEmpty : styles.smallInput}
+              value={this.props.previousStep.actual_reps}
+            />
           </View>
         </View>
 
