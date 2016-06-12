@@ -185,6 +185,7 @@ class SetupScreen extends Component {
     var itemNodes = this.props.workoutTemplates.map((templateTuple) => {
       return <Picker.Item label={templateTuple[1]} value={templateTuple[0]} key={templateTuple[0]} />;
     });
+    itemNodes.splice(0, 0, <Picker.Item label="Select a workout" value={null} key={0} />);
     return (
       <View style={styles.container}>
         <ScreenTitle text="Choose A Workout" />
@@ -404,12 +405,14 @@ class WorkoutRestScreen extends Component {
         <View style={{width: 320}}>
           <SubTitle text="Previous Set Data" />
           <View style={styles.horizontal}>
-            <Text style={styles.label}>REPS</Text>
-            <TextInput onChange={this.handleChange.bind(this, 'actual_reps')} style={styles.smallInput} />
-          </View>
-          <View style={styles.horizontal}>
-            <Text style={styles.label}>WEIGHT</Text>
-            <TextInput onChange={this.handleChange.bind(this, 'actual_weight')} style={styles.smallInput} />
+            <View>
+              <Text style={styles.label}>REPS</Text>
+              <TextInput keyboardType="number-pad" onChange={this.handleChange.bind(this, 'actual_reps')} style={styles.smallInput} />
+            </View>
+            <View>
+              <Text style={styles.label}>WEIGHT</Text>
+              <TextInput keyboardType="number-pad" onChange={this.handleChange.bind(this, 'actual_weight')} style={styles.smallInput} />
+            </View>
           </View>
         </View>
 
@@ -529,7 +532,7 @@ class SubTitle extends Component {
 
   style () {
     return {
-      marginBottom: 15,
+      marginBottom: 10,
       color: '#333',
       fontFamily: 'Futura',
       fontSize: 20,
@@ -715,14 +718,17 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   label: {
-    height: 40,
-    lineHeight: 28,
+    height: 20,
+    marginTop: 0,
+    marginBottom: 5,
+    color: '#333',
+    fontFamily: 'Futura',
+    fontSize: 16,
   },
   smallInput: {
-    width: 100,
+    width: 155,
     height: 40,
-    marginBottom: 10,
-    marginLeft: 10,
+    marginTop: 0,
     backgroundColor: 'white',
     textAlign: 'center',
   },
