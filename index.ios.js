@@ -361,10 +361,12 @@ class WorkoutRestScreen extends Component {
   }
 
   handlePress () {
-    this.setState({stop_time: new Date(), complete: true, alive: false});
-    this.props.appScope.saveStep(this.props.previousStep);
-    if (!this.props.upcomingStep) {
-      this.props.appScope.setState({stage: 6});
+    if (this.props.previousStep.actual_weight && this.props.previousStep.actual_reps) {
+      this.setState({stop_time: new Date(), complete: true, alive: false});
+      this.props.appScope.saveStep(this.props.previousStep);
+      if (!this.props.upcomingStep) {
+        this.props.appScope.setState({stage: 6});
+      }
     }
   }
 
@@ -436,8 +438,10 @@ class FinalWorkoutScreen extends Component {
   }
 
   handlePress () {
-    this.props.appScope.saveStep(this.props.previousStep);
-    this.props.appScope.setState({stage: 6});
+    if (this.props.previousStep.actual_weight && this.props.previousStep.actual_reps) {
+      this.props.appScope.saveStep(this.props.previousStep);
+      this.props.appScope.setState({stage: 6});
+    }
   }
 
   handleChange (prop, e) {
