@@ -370,7 +370,6 @@ class WorkoutRestScreen extends Component {
         siblings[i].actual_weight = step.actual_weight;
       };
       this.props.appScope.setState({steps: steps});
-      console.log(siblings);
       this.setState({stop_time: new Date(), complete: true, alive: false});
       this.props.appScope.saveStep(this.props.previousStep);
       if (!this.props.upcomingStep) {
@@ -386,6 +385,8 @@ class WorkoutRestScreen extends Component {
     step[prop] = e.nativeEvent.text;
     steps[i] = step;
     this.props.appScope.setState({steps: steps});
+    if (prop == 'actual_reps') this.setState({hasChangedReps: true});
+    if (prop == 'actual_weight') this.setState({hasChangedWeight: true});
   }
 
   handleSkip (step) {
@@ -418,11 +419,21 @@ class WorkoutRestScreen extends Component {
           <View style={styles.horizontal}>
             <View>
               <Text style={styles.label}>REPS</Text>
-              <TextInput keyboardType="number-pad" onChange={this.handleChange.bind(this, 'actual_reps')} style={styles.smallInput} value={this.props.previousStep.actual_reps} />
+              <TextInput
+                keyboardType="number-pad"
+                onChange={this.handleChange.bind(this, 'actual_reps')}
+                style={(this.state.hasChangedReps) ? styles.smallInputEmpty : styles.smallInput}
+                value={this.props.previousStep.actual_reps}
+              />
             </View>
             <View>
               <Text style={styles.label}>WEIGHT</Text>
-              <TextInput keyboardType="number-pad" onChange={this.handleChange.bind(this, 'actual_weight')} style={styles.smallInput} value={this.props.previousStep.actual_weight} />
+              <TextInput
+                keyboardType="number-pad"
+                onChange={this.handleChange.bind(this, 'actual_weight')}
+                style={(this.state.hasChangedWeight) ? styles.smallInputEmpty : styles.smallInput}
+                value={this.props.previousStep.actual_weight}
+              />
             </View>
           </View>
         </View>
@@ -474,10 +485,12 @@ class FinalWorkoutScreen extends Component {
           <View style={styles.horizontal}>
             <Text style={styles.label}>REPS</Text>
             <TextInput onChange={this.handleChange.bind(this, 'actual_reps')} style={styles.smallInput} />
+            // TODO: Update based on recent changes
           </View>
           <View style={styles.horizontal}>
             <Text style={styles.label}>WEIGHT</Text>
             <TextInput onChange={this.handleChange.bind(this, 'actual_weight')} style={styles.smallInput} />
+            // TODO: Update based on recent changes
           </View>
         </View>
 
@@ -742,6 +755,19 @@ const styles = StyleSheet.create({
     width: 155,
     height: 40,
     marginTop: 0,
+    color: '#CCC',
+    fontFamily: 'Futura',
+    fontSize: 20,
+    backgroundColor: 'white',
+    textAlign: 'center',
+  },
+  smallInputEmpty: {
+    width: 155,
+    height: 40,
+    marginTop: 0,
+    color: '#66533D',
+    fontFamily: 'Futura',
+    fontSize: 20,
     backgroundColor: 'white',
     textAlign: 'center',
   },
