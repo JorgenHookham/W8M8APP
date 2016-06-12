@@ -587,13 +587,13 @@ class Timer extends Component {
     var max = this.props.max * 1000, elapsed = this.state.elapsed;
     var style = {
       marginBottom: 15,
-      color: '#333333',
+      color: '#FFCCAA',
       fontFamily: 'menlo',
       fontSize: 100,
       textAlign: 'center',
     };
-    if (max && elapsed > max) style.color = '#FF3300';
-    else if (max && elapsed > max - max * .2) style.color = '#AD4500';
+    if (max && elapsed > max) style.color = '#FF3333';
+    else if (max && elapsed > max - max * .2) style.color = '#FF6633';
     return style;
   }
 }
