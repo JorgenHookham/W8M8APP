@@ -361,7 +361,16 @@ class WorkoutRestScreen extends Component {
   }
 
   handlePress () {
-    if (this.props.previousStep.actual_weight && this.props.previousStep.actual_reps) {
+    var step = this.props.previousStep;
+    var steps = this.props.appScope.state.steps;
+    if (step.actual_weight && step.actual_reps) {
+      var siblings = steps.filter((s) => { return s.name == step.name && !s.complete; });
+      for (var i = 0; i < siblings.length; i++) {
+        siblings[i].actual_reps = step.actual_reps;
+        siblings[i].actual_weight = step.actual_weight;
+      };
+      this.props.appScope.setState({steps: steps});
+      console.log(siblings);
       this.setState({stop_time: new Date(), complete: true, alive: false});
       this.props.appScope.saveStep(this.props.previousStep);
       if (!this.props.upcomingStep) {
@@ -409,11 +418,11 @@ class WorkoutRestScreen extends Component {
           <View style={styles.horizontal}>
             <View>
               <Text style={styles.label}>REPS</Text>
-              <TextInput keyboardType="number-pad" onChange={this.handleChange.bind(this, 'actual_reps')} style={styles.smallInput} />
+              <TextInput keyboardType="number-pad" onChange={this.handleChange.bind(this, 'actual_reps')} style={styles.smallInput} value={this.props.previousStep.actual_reps} />
             </View>
             <View>
               <Text style={styles.label}>WEIGHT</Text>
-              <TextInput keyboardType="number-pad" onChange={this.handleChange.bind(this, 'actual_weight')} style={styles.smallInput} />
+              <TextInput keyboardType="number-pad" onChange={this.handleChange.bind(this, 'actual_weight')} style={styles.smallInput} value={this.props.previousStep.actual_weight} />
             </View>
           </View>
         </View>
