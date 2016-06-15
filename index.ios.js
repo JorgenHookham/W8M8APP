@@ -101,7 +101,7 @@ class W8M8 extends Component {
     };
     // Real request
     var request = new XMLHttpRequest();
-    request.open('PATCH', 'http://localhost:8000/api/workouts/?format=json');
+    request.open('PATCH', 'http://w8m8.herokuapp.com/api/workouts/?format=json');
     request.setRequestHeader('Content-Type', 'application/json');
     request.send(JSON.stringify(data));
   }
@@ -579,7 +579,10 @@ class Timer extends Component {
 
   constructor (props) {
     super(props);
-    this.state = {elapsed: 0};
+    this.state = {
+      elapsed: 0,
+      startedAt: new Date()
+    };
   }
 
   componentDidMount () {
@@ -606,7 +609,7 @@ class Timer extends Component {
   start () {
     var timerComponent = this;
     var interval = this.interval = setInterval(() => {
-      var elapsed = timerComponent.state.elapsed + 1000;
+      var elapsed = new Date() - this.state.startedAt;
       timerComponent.setState({elapsed: elapsed});
     }, 1000);
     this.setState({timing: true});
